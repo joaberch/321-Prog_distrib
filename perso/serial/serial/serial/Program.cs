@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-const string PATH = "C:\\Temp";
 const string OTHERFILEPATH = "C:\\Users\\px59nyu\\Documents\\joachim.json";
 
 
@@ -14,23 +13,58 @@ Actor actor1 = new Actor()
     IsAlive = true,
 };
 
-Character character1 = new Character()
+Actor actor2 = new Actor()
 {
-    FirstName = "Alain",
+    FirstName = "Bill",
+    LastName = "Asalways",
+    BirthDate = DateTime.Now,
+    Country = "Kirghizistan",
+    IsAlive = true,
+};
+
+Character gerard = new Character()
+{
+    FirstName = "Gérard",
     LastName = "Didier",
     Description = "A faim",
     PlayedBy = actor1,
 };
 
+Character maya = new Character()
+{
+    FirstName = "Maya",
+    LastName = "Didier",
+    Description = "N'a pas faim",
+    PlayedBy = actor2,
+};
+
+Episode episode = new Episode()
+{
+    Title = "The beginning",
+    DurationMinutes = 90,
+    SequenceNumber = 1,
+    Director = "Tarantino",
+    Synopsis = "Le début du commencement",
+    Characters = new List<Character> { gerard, maya }
+};
+
 //data in code
-string serialized = SerializeCharacter(character1);
+string serialized = SerializeCharacter(gerard);
 SaveData(serialized, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "character");
 Character deserializedcharacter = DeSerializecharacter(serialized);
 
+//data in file
 string serializedOther = ReadFile(OTHERFILEPATH);
 Character character2 = DeSerializecharacter(serializedOther);
-Console.WriteLine($"Le personnage : {character2.FirstName} est joué par {character1.PlayedBy.FirstName}");
+Console.WriteLine($"Le personnage : {character2.FirstName}");
 
+//Episode
+string serializedEpisode = SerializeEpisode(episode);
+SaveData(serializedEpisode, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "episode");
+Episode ep = DeserializeEpisode(serializedEpisode);
+Console.WriteLine(ep.Title);
+
+//wait
 Console.ReadLine();
 
 void SaveData(string serialized, string path, string fileName)
@@ -46,6 +80,16 @@ string SerializeCharacter(Character character)
     return JsonSerializer.Serialize(character);
 }
 
+string SerializeEpisode(Episode episode)
+{
+    return JsonSerializer.Serialize(episode);
+}
+
+Episode DeserializeEpisode(string serialized)
+{
+    return JsonSerializer.Deserialize<Episode>(serialized);
+}
+
 Character DeSerializecharacter(string serialized)
 {
     return JsonSerializer.Deserialize<Character>(serialized);
@@ -55,6 +99,16 @@ string ReadFile(string path)
 {
     using StreamReader reader = new(path);
     return reader.ReadToEnd();
+}
+
+public class Episode
+{
+    public string Title { get; set; }
+    public int DurationMinutes { get; set; }
+    public int SequenceNumber { get; set; }
+    public string Director { get; set; }
+    public string Synopsis { get; set; }
+    public List<Character> Characters { get; set; } = new List<Character>();
 }
 
 public class Character
