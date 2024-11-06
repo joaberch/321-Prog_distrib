@@ -49,19 +49,19 @@ Episode episode = new Episode()
 };
 
 //data in code
-string serialized = SerializeCharacter(gerard);
+string serialized = Serialize(gerard);
 SaveData(serialized, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "character");
-Character deserializedcharacter = DeSerializecharacter(serialized);
+Character deserializedcharacter = Deserialize<Character>(serialized);
 
 //data in file
 string serializedOther = ReadFile(OTHERFILEPATH);
-Character character2 = DeSerializecharacter(serializedOther);
+Character character2 = Deserialize<Character>(serializedOther);
 Console.WriteLine($"Le personnage : {character2.FirstName}");
 
 //Episode
-string serializedEpisode = SerializeEpisode(episode);
+string serializedEpisode = Serialize(episode);
 SaveData(serializedEpisode, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "episode");
-Episode ep = DeserializeEpisode(serializedEpisode);
+Episode ep = Deserialize<Episode>(serializedEpisode);
 Console.WriteLine(ep.Title);
 
 //wait
@@ -75,24 +75,14 @@ void SaveData(string serialized, string path, string fileName)
     }
 }
 
-string SerializeCharacter(Character character)
+string Serialize(dynamic obj)
 {
-    return JsonSerializer.Serialize(character);
+    return JsonSerializer.Serialize(obj);
 }
 
-string SerializeEpisode(Episode episode)
+static T Deserialize<T>(string serialized)
 {
-    return JsonSerializer.Serialize(episode);
-}
-
-Episode DeserializeEpisode(string serialized)
-{
-    return JsonSerializer.Deserialize<Episode>(serialized);
-}
-
-Character DeSerializecharacter(string serialized)
-{
-    return JsonSerializer.Deserialize<Character>(serialized);
+    return JsonSerializer.Deserialize<T>(serialized);
 }
 
 string ReadFile(string path)
