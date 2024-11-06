@@ -17,10 +17,38 @@ ntpData = ntpClient.Receive(ref ntpEndpoint);
 
 DateTime ntpTime = NtpPacket.ToDateTime(ntpData);
 
-//Console.WriteLine("Heure actuelle : " + ntpTime.ToString());
+//A
+Console.WriteLine("Heure actuelle : " + ntpTime.ToString());
+
+//B
 Console.WriteLine("Heure actuelle (format personnalisé) : " + ntpTime.ToString("dddd, dd MMMM yyyy"));
 Console.WriteLine("Heure actuelle (format personnalisé) : " + ntpTime.ToString("dd.MM.yyyy HH:mm:ss"));
 Console.WriteLine("Heure actuelle (format personnalisé) : " + ntpTime.ToString("dd.MM.yyyy"));
+
+//C
+//1
+DateTime localTime = DateTime.Now;
+TimeSpan difference = localTime - ntpTime;
+Console.WriteLine($"Différence : {difference} - en secondes : {difference.TotalSeconds}");
+
+//2
+localTime = ntpTime.Add(difference);
+Console.WriteLine($"Nouvelle date local : {localTime}");
+
+//3
+DateTime toUtc = localTime.ToUniversalTime();
+Console.WriteLine($"Heure en UTC : {toUtc}");
+
+//4
+DateTime toLocalTime = toUtc.ToLocalTime();
+Console.WriteLine($"Heure GMT : {toLocalTime}");
+
+//5
+DateTime toGMT = toLocalTime.AddHours(-1); //local
+
+//6
+DateTime toLocal = toGMT.ToLocalTime();
+Console.WriteLine($"Heure local : {toLocal}");
 
 ntpClient.Close();
 
