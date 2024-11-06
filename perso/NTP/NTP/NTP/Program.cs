@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-string ntpServer = "0.ch.pool.ntp.org";
+string ntpServer = "time.windows.com";
 
 byte[] ntpData = new byte[48];
 ntpData[0] = 0x1B; //LI = 0 (no warning), VN = 3 (IPv4 only), Mode = 3 (Client Mode)
@@ -17,7 +17,10 @@ ntpData = ntpClient.Receive(ref ntpEndpoint);
 
 DateTime ntpTime = NtpPacket.ToDateTime(ntpData);
 
-Console.WriteLine("Heure actuelle : " + ntpTime.ToString());
+//Console.WriteLine("Heure actuelle : " + ntpTime.ToString());
+Console.WriteLine("Heure actuelle (format personnalisé) : " + ntpTime.ToString("dddd, dd MMMM yyyy"));
+Console.WriteLine("Heure actuelle (format personnalisé) : " + ntpTime.ToString("dd.MM.yyyy HH:mm:ss"));
+Console.WriteLine("Heure actuelle (format personnalisé) : " + ntpTime.ToString("dd.MM.yyyy"));
 
 ntpClient.Close();
 
